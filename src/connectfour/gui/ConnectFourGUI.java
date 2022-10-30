@@ -5,6 +5,7 @@ import connectfour.model.Observer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,8 +16,11 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
 
 /**
  * A JavaFX GUI for the networked Connect Four game.
@@ -26,9 +30,37 @@ import java.util.EnumMap;
  */
 public class ConnectFourGUI extends Application implements Observer<ConnectFourBoard> {
 
+    private ConnectFourBoard model;
+    private Button[][] grid;
+    private Image EMPTY;
+    private Image Player1;
+    private Image Player2;
+    private Label movesMade;
+    private Label currPlayer;
+    private Label gameStatus;
+
+
     @Override
     public void init() {
         // TODO
+        this.model = new ConnectFourBoard();
+        model.addObserver(this);
+    }
+
+    private GridPane makeGridPane(){
+        GridPane gridPane = new GridPane();
+        grid = new Button[ConnectFourBoard.ROWS][ConnectFourBoard.COLS];
+        for(int row = 0; row < ConnectFourBoard.ROWS; row++){
+            for(int col = 0; col < ConnectFourBoard.COLS; col++){
+                Button button = new Button();
+                int currCol = col;
+                button.setGraphic(new ImageView(EMPTY));
+                button.setOnAction(event -> model.makeMove(currCol));
+                grid[row][col] = button;
+                gridPane.add(button, col, row);
+            }
+        }
+        return gridPane;
     }
 
     /**
@@ -39,7 +71,28 @@ public class ConnectFourGUI extends Application implements Observer<ConnectFourB
      */
     public void start( Stage stage ) throws Exception {
         // TODO
+        EMPTY = new Image(new FileInputStream("src/connectfour/gui/empty.png"));
+        Player1 = new Image(new FileInputStream("src/connectfour/gui/p1black.png"));
+        Player2 = new Image(new FileInputStream("src/connectfour/gui/p2red.png"));
+
+        BorderPane mainBorderPane = new BorderPane();
+        BorderPane labelBorderPane = new BorderPane();
+        GridPane gridPane = makeGridPane();
+
+        movesMade = new Label("Moves made: " + model.getMovesMade());
+        currPlayer = new Label("Current Player: " + model.getCurrentPlayer());
+        gameStatus = new Label("Game Status: " + model.getGameStatus());
+        labelBorderPane.setLeft(movesMade);
+        labelBorderPane.setCenter(currPlayer);
+        labelBorderPane.setRight(gameStatus);
+
+        mainBorderPane.setCenter(gridPane);
+        mainBorderPane.setBottom(labelBorderPane);
+
+        stage.setScene(new Scene(mainBorderPane));
+        stage.setTitle("Connect Four GUI");
         stage.show();
+
     }
 
     /**
@@ -51,6 +104,9 @@ public class ConnectFourGUI extends Application implements Observer<ConnectFourB
     @Override
     public void update(ConnectFourBoard connectFourBoard) {
         // TODO
+        for()
+
+
     }
 
     /**

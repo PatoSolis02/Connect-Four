@@ -131,19 +131,40 @@ public class ConnectFourBoard {
     public void makeMove(int col) {
         // TODO
         // increment the move counter
-
+        this.movesMade++;
 
         // find first open row in the board at col (from the bottom up) and place
         // the current player piece at that position.
-
+        for(int r = ROWS - 1; r >= 0; r-- ){
+            if(board[r][col] == Player.NONE){
+                board[r][col] = getCurrentPlayer();
+                lastCol = col;
+                lastRow = r;
+                break;
+            }
+        }
 
         // check if the game has been won (hasWonGame()), or tied (moves made equals
         // the total number of cells), and set the status accordingly.
         // in the case the game is still going on the current player needs to be switched.
+        if(hasWonGame()){
+            if(getCurrentPlayer() == Player.P1){
+                status = Status.P1_WINS;
+            }else{
+                status = Status.P2_WINS;
+            }
+        }else if(getMovesMade() == ROWS * COLS){
+            status = Status.TIE;
+        }
 
-
+        if(getCurrentPlayer() == Player.P1){
+            currentPlayer = Player.P2;
+        }else{
+            currentPlayer = Player.P1;
+        }
 
         // let the view know the move has been made by notifying the observers
+        notifyObservers();
     }
 
     /**
