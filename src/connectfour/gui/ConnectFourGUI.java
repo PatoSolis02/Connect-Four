@@ -104,7 +104,31 @@ public class ConnectFourGUI extends Application implements Observer<ConnectFourB
     @Override
     public void update(ConnectFourBoard connectFourBoard) {
         // TODO
-        for()
+        for(int r = 0; r < ConnectFourBoard.ROWS; r++){
+            for(int c = 0; c < ConnectFourBoard.COLS; c++){
+                if(connectFourBoard.getContents(r, c).equals(ConnectFourBoard.Player.NONE)){
+                    grid[r][c].setGraphic(new ImageView(EMPTY));
+                }else if(connectFourBoard.getContents(r, c).equals(ConnectFourBoard.Player.P1)){
+                    grid[r][c].setGraphic(new ImageView(Player1));
+                }else{
+                    grid[r][c].setGraphic(new ImageView(Player2));
+                }
+            }
+        }
+
+        movesMade.setText("Moves made: " +  model.getMovesMade());
+        currPlayer.setText("Current Player: " + model.getCurrentPlayer());
+        gameStatus.setText("Game Status: " + model.getGameStatus());
+
+        if(model.getGameStatus() == ConnectFourBoard.Status.P1_WINS ||
+                model.getGameStatus() == ConnectFourBoard.Status.P2_WINS ||
+                model.getGameStatus() == ConnectFourBoard.Status.TIE){
+            for(int r = 0; r < ConnectFourBoard.ROWS; r++) {
+                for (int c = 0; c < ConnectFourBoard.COLS; c++) {
+                    grid[r][c].setDisable(true);
+                }
+            }
+        }
 
 
     }
