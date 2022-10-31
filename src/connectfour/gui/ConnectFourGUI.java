@@ -26,17 +26,25 @@ import java.util.List;
  * A JavaFX GUI for the networked Connect Four game.
  *
  * @author RIT CS
- * @author YOUR NAME HERE
+ * @author Patricio Solis
  */
 public class ConnectFourGUI extends Application implements Observer<ConnectFourBoard> {
 
+    /** gives access to the grid in the model */
     private ConnectFourBoard model;
+    /** grid of buttons to make each one distinct and functional */
     private Button[][] grid;
+    /** image for start state and for where there is no pieces */
     private Image EMPTY;
+    /** image for player 1 move */
     private Image Player1;
+    /** image for player 2 move */
     private Image Player2;
+    /** displays the total number of moves made */
     private Label movesMade;
+    /** displays the current player to make a move */
     private Label currPlayer;
+    /** displays the current state of the game */
     private Label gameStatus;
 
 
@@ -47,6 +55,11 @@ public class ConnectFourGUI extends Application implements Observer<ConnectFourB
         model.addObserver(this);
     }
 
+    /**
+     * Builds the grid of buttons with functionality
+     *
+     * @return GridPane with functional grid of buttons
+     */
     private GridPane makeGridPane(){
         GridPane gridPane = new GridPane();
         grid = new Button[ConnectFourBoard.ROWS][ConnectFourBoard.COLS];
@@ -103,7 +116,9 @@ public class ConnectFourGUI extends Application implements Observer<ConnectFourB
      */
     @Override
     public void update(ConnectFourBoard connectFourBoard) {
-        // TODO
+
+        // checks the connectFourBoard in the model and checks each cell and matches the cell
+        // with the appropriate image
         for(int r = 0; r < ConnectFourBoard.ROWS; r++){
             for(int c = 0; c < ConnectFourBoard.COLS; c++){
                 if(connectFourBoard.getContents(r, c).equals(ConnectFourBoard.Player.NONE)){
@@ -116,10 +131,12 @@ public class ConnectFourGUI extends Application implements Observer<ConnectFourB
             }
         }
 
+        // updates the labels
         movesMade.setText("Moves made: " +  model.getMovesMade());
         currPlayer.setText("Current Player: " + model.getCurrentPlayer());
         gameStatus.setText("Game Status: " + model.getGameStatus());
 
+        // if the game is won or tied it disables the grid
         if(model.getGameStatus() == ConnectFourBoard.Status.P1_WINS ||
                 model.getGameStatus() == ConnectFourBoard.Status.P2_WINS ||
                 model.getGameStatus() == ConnectFourBoard.Status.TIE){
